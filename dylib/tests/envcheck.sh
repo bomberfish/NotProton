@@ -99,6 +99,34 @@ is "other backends stay" "CX_GRAPHICS_BACKEND DXMT_CONFIG " "$(seen)"
 is "nothing to ignore logs nothing" "" "$np_dropped"
 unset -v CX_GRAPHICS_BACKEND DXMT_CONFIG
 
+echo "== metalgldrv =="
+mgl=$(sed -n '/^np_metalgldrv_dylib=/,/^fi$/p' "$SRC")
+[ -n "$mgl" ] || { echo "FAIL: the metalgldrv block was not found"; exit 1; }
+mgl_at=$(grep -n '^np_metalgldrv_dylib=' "$SRC" | cut -d: -f1)
+[ "$mgl_at" -lt "$forward_at" ] ||
+  bad "the metalgldrv block runs before the forwarding loop" "< $forward_at" "$mgl_at"
+saved_home=$HOME
+HOME="$work/home"
+dylib="$HOME/Library/Application Support/metalgldrv/libmetalgldrv.dylib"
+mgl_run() { unset -v METALGLDRV_HOOK_NSOPENGL; eval "$mgl"; printf '%s|%s|%s' "$np_metalgldrv" "$np_metalgldrv_note" "${METALGLDRV_HOOK_NSOPENGL:-}"; }
+wine_unix="/R R/lib/wine/x86_64-unix"
+unset -v NOTPROTON_METALGLDRV
+is "off unless the game turns it on" "|off|" "$(mgl_run)"
+NOTPROTON_METALGLDRV=1
+is "turned on but not installed" "|not installed ($dylib)|" "$(mgl_run)"
+mkdir -p "$(dirname "$dylib")"
+: > "$dylib"
+is "turned on and installed" "$dylib|on, $dylib|1" "$(mgl_run)"
+wine_unix="/R R/lib/wine/aarch64-unix"
+is "not on arm64 Wine" "|not used on arm64 Wine|" "$(mgl_run)"
+unset -v NOTPROTON_METALGLDRV
+HOME=$saved_home
+# shellcheck disable=SC2016 # The stub and loop expand inside the child shell.
+mgl_forwarded=$(env -i PATH="$PATH" METALGLDRV_STRICT=1 METALGLDRV_HOOK_NSOPENGL=1 NOTPROTON_METALGLDRV=1 sh -c '
+  env() { printf "METALGLDRV_STRICT=1\nMETALGLDRV_HOOK_NSOPENGL=1\nNOTPROTON_METALGLDRV=1\n"; }
+  f=$1; set --; eval "$f"; printf "%s " "$@"' sh "$forward")
+is "driver settings reach Wine" "--env METALGLDRV_HOOK_NSOPENGL=1 --env METALGLDRV_STRICT=1 " "$mgl_forwarded"
+
 if [ "$fails" -eq 0 ]; then
 	echo "==> envcheck: all assertions hold"
 else

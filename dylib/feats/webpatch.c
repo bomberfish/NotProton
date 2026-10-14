@@ -222,6 +222,7 @@ static int out_expand(np_out_t *o, const char *replace, const np_cap_t *caps) {
     "if(" NP_FEX_TOOLS ".indexOf(n)<0||/[<>\\n]|\\$'/.test(o))return;" \
     "const L=MSCXLaunch(o,t.unAppID)," \
     "ks=L.k.filter(k=>/^D3DM_[A-Z0-9_]*$/.test(k)||k===\"ROSETTA_ADVERTISE_AVX\"" \
+    "||k===\"NOTPROTON_METALGLDRV\"" \
     "||k===\"CX_GRAPHICS_BACKEND\"&&L.g(k)===\"d3dmetal\");" \
     "ks.length&&L.s(ks.map(k=>[k,\"\"]))}"
 
@@ -272,6 +273,13 @@ static int out_expand(np_out_t *o, const char *replace, const np_cap_t *caps) {
     "{data:\"1.72\",label:\"1.72x\"}," \
     "{data:\"2.0\",label:\"2x\"}," \
     "{data:\"3.0\",label:\"3x\"}]," \
+    "mg=!fex&&\"1\"===g(\"NOTPROTON_METALGLDRV\")," \
+    "mk=[\"METALGLDRV_STRICT\",\"METALGLDRV_TURBOHAX\",\"METALGLDRV_SPEEDDEMON\"]," \
+    "mp=mk.find(k=>\"1\"===g(k))||\"\"," \
+    "P=[{data:\"\",label:npL(\"Default\",\"默认\")}," \
+    "{data:\"METALGLDRV_STRICT\",label:npL(\"Strict (slower, most accurate)\",\"严格（较慢，最准确）\")}," \
+    "{data:\"METALGLDRV_TURBOHAX\",label:npL(\"Turbo (faster, less accurate)\",\"加速（更快，准确性较低）\")}," \
+    "{data:\"METALGLDRV_SPEEDDEMON\",label:npL(\"Speed demon (fastest, least accurate)\",\"极速（最快，准确性最低）\")}]," \
     "B=[{data:\"\",label:npL(\"Automatic\",\"自动\")}," \
     "{data:\"d3dmetal\",label:\"D3DMetal\"}," \
     "{data:\"dxmt\",label:\"DXMT\"}," \
@@ -301,6 +309,17 @@ static int out_expand(np_out_t *o, const char *replace, const np_cap_t *caps) {
     "children:(0," RT ".jsx)(" BARREL ".m,{rgOptions:U," \
     "selectedOption:sw?(U.find(u=>u.data&&+u.data===fn)||{data:String(fn)}).data:\"\"," \
     "onChange:v=>s([[\"DXMT_METALFX_SPATIAL_SWAPCHAIN\",v.data?\"1\":\"\"],[\"DXMT_CONFIG\",fx(v.data)]])})},\"usf\")," \
+    "!fex&&(0," RT ".jsxs)(" BARREL ".XY,{label:\"OpenGL\",children:[" \
+    "(0," RT ".jsx)(" BARREL ".Yh,{className:\"MSCXRow\"," \
+    "label:npL(\"metalgldrv (OpenGL 4.6 on Metal instead of Apple's OpenGL 4.1)\"," \
+    "\"metalgldrv（以基于 Metal 的 OpenGL 4.6 取代 Apple 的 OpenGL 4.1）\"),checked:mg," \
+    "onChange:v=>s(v?[[\"NOTPROTON_METALGLDRV\",\"1\"]]:[[\"NOTPROTON_METALGLDRV\",\"\"]," \
+    "[\"METALGLDRV_USE_METALFX\",\"\"]].concat(mk.map(k=>[k,\"\"])))},\"NOTPROTON_METALGLDRV\")," \
+    "mg&&T([\"METALGLDRV_USE_METALFX\"],npL(\"MetalFX upscaling\",\"MetalFX 超分辨率\"),\"1\")" \
+    "]},\"ogl\")," \
+    "mg&&(0," RT ".jsx)(" BARREL ".XY,{label:npL(\"metalgldrv accuracy\",\"metalgldrv 精度\")," \
+    "children:(0," RT ".jsx)(" BARREL ".m,{rgOptions:P,selectedOption:mp," \
+    "onChange:v=>s(mk.map(k=>[k,k===v.data?\"1\":\"\"]))})},\"oglp\")," \
     "(0," RT ".jsx)(" BARREL ".XY,{label:npL(\"Controllers (May break Steam Input. Not recommended)\"," \
     "\"控制器（可能导致 Steam Input 失效，不推荐）\"),children:" \
     "T([\"NOTPROTON_RAW_CONTROLLERS\"],npL(\"Let games read controllers directly\"," \

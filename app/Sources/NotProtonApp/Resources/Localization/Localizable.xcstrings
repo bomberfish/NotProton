@@ -1645,6 +1645,16 @@
         }
       }
     },
+    "Download the latest metalgldrv release from GitHub." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从 GitHub 下载最新的 metalgldrv 版本。"
+          }
+        }
+      }
+    },
     "Downloaded missing components." : {
       "localizations" : {
         "zh-Hans" : {
@@ -1661,6 +1671,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在从 %@ 下载"
+          }
+        }
+      }
+    },
+    "Downloading metalgldrv %@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在下载 metalgldrv %@"
           }
         }
       }
@@ -1765,6 +1785,26 @@
         }
       }
     },
+    "GitHub answered %lld for %@." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub 对 %2$@ 返回了 %1$lld。"
+          }
+        }
+      }
+    },
+    "GitHub could not be reached. %@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法连接 GitHub。%@"
+          }
+        }
+      }
+    },
     "If NotProton is installed there, it will stay installed. Continue anyway?" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1801,6 +1841,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "将 NotProton 安装到 Steam。"
+          }
+        }
+      }
+    },
+    "Install metalgldrv" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安装 metalgldrv"
           }
         }
       }
@@ -2035,6 +2085,16 @@
         }
       }
     },
+    "Looking for the latest metalgldrv" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在查找最新的 metalgldrv"
+          }
+        }
+      }
+    },
     "Missing components: %@. Run make app-payload and build the app again." : {
       "localizations" : {
         "zh-Hans" : {
@@ -2171,6 +2231,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已卸载"
+          }
+        }
+      }
+    },
+    "No metalgldrv release was found on GitHub." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 GitHub 上没有找到 metalgldrv 的发布版本。"
           }
         }
       }
@@ -2394,6 +2464,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "打开系统设置"
+          }
+        }
+      }
+    },
+    "OpenGL 4.6 on Metal" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "基于 Metal 的 OpenGL 4.6"
           }
         }
       }
@@ -2808,6 +2888,16 @@
         }
       }
     },
+    "Remove metalgldrv" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移除 metalgldrv"
+          }
+        }
+      }
+    },
     "Remove the %@ copy?" : {
       "localizations" : {
         "zh-Hans" : {
@@ -2844,6 +2934,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在移除文件"
+          }
+        }
+      }
+    },
+    "Removing metalgldrv" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在移除 metalgldrv"
           }
         }
       }
@@ -2894,6 +2994,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用 Valve 原版应用包替换 Steam？"
+          }
+        }
+      }
+    },
+    "Replaces Apple's OpenGL 4.1 for games that turn it on under Properties > Compatibility > OpenGL. Not used by the FEX build." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在“属性 > 兼容性 > OpenGL”中启用后，为该游戏取代 Apple 的 OpenGL 4.1。FEX 版本不使用。"
           }
         }
       }
@@ -3691,6 +3801,16 @@
         }
       }
     },
+    "The downloaded metalgldrv does not match its checksum." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载的 metalgldrv 与其校验和不符。"
+          }
+        }
+      }
+    },
     "The game SAVE DATA inside the prefix WILL BE LOST." : {
       "localizations" : {
         "zh-Hans" : {
@@ -3727,6 +3847,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已安装版本的记录无效。"
+          }
+        }
+      }
+    },
+    "The metalgldrv download has no libmetalgldrv.dylib." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载的 metalgldrv 中没有 libmetalgldrv.dylib。"
           }
         }
       }
@@ -4001,6 +4131,16 @@
         }
       }
     },
+    "Version %@ installed." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已安装版本 %@。"
+          }
+        }
+      }
+    },
     "Version %@ not supported (supported: %@)" : {
       "localizations" : {
         "zh-Hans" : {
@@ -4197,6 +4337,39 @@
         }
       }
     },
+    "metalgldrv" : {
+      "shouldTranslate" : false
+    },
+    "metalgldrv %@ installed. Turn it on for a game under Properties > Compatibility > OpenGL." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已安装 metalgldrv %@。可在游戏的“属性 > 兼容性 > OpenGL”中启用。"
+          }
+        }
+      }
+    },
+    "metalgldrv %@ is already the latest." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "metalgldrv %@ 已是最新版本。"
+          }
+        }
+      }
+    },
+    "metalgldrv removed. Games set to use it run on Apple's OpenGL." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已移除 metalgldrv。设为使用它的游戏将改用 Apple 的 OpenGL。"
+          }
+        }
+      }
+    },
     "names no CDN host to fetch from." : {
       "localizations" : {
         "zh-Hans" : {
@@ -4243,6 +4416,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "重复声明了软件包 ID %@。"
+          }
+        }
+      }
+    },
+    "unknown" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知"
           }
         }
       }

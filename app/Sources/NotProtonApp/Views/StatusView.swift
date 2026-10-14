@@ -356,9 +356,33 @@ struct StatusView: View {
 
             componentsSection(snapshot.payload)
 
+            metalGLSection(snapshot.metalGL)
+
             dangerSection
         }
         .formStyle(.grouped)
+    }
+
+    private func metalGLSection(_ installed: MetalGLDriver.Installed?) -> some View {
+        Section("metalgldrv") {
+            StatusRow(
+                title: String(localized: "OpenGL 4.6 on Metal"),
+                value: installed.map { String(localized: "Version \($0.version ?? String(localized: "unknown")) installed.") }
+                    ?? String(localized: "Not installed."),
+                tone: installed == nil ? .neutral : .ok,
+                detail: String(localized: "Replaces Apple's OpenGL 4.1 for games that turn it on under Properties > Compatibility > OpenGL. Not used by the FEX build."),
+                action: StatusAction(
+                    label: installed == nil ? String(localized: "Install") : String(localized: "Update"),
+                    help: String(localized: "Download the latest metalgldrv release from GitHub."),
+                    isEnabled: status.isIdle
+                ) { Task { await status.installMetalGL() } },
+                menu: installed == nil ? [] : [
+                    StatusAction(label: String(localized: "Remove"), role: .destructive, isEnabled: status.isIdle) {
+                        Task { await status.removeMetalGL() }
+                    },
+                ]
+            )
+        }
     }
 
     private var dangerSection: some View {

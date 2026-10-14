@@ -184,6 +184,23 @@ if [ "${wine_unix##*/}" = aarch64-unix ]; then
   done
 fi
 
+# metalgldrv replaces Apple's OpenGL (4.1) with OpenGL 4.6 on Metal for games that turn it on.
+# The launcher injects it into Wine; its winemac.so fixes only match the x86_64 build.
+np_metalgldrv_dylib="$HOME/Library/Application Support/metalgldrv/libmetalgldrv.dylib"
+np_metalgldrv=""
+np_metalgldrv_note="off"
+if [ "${NOTPROTON_METALGLDRV:-}" = 1 ]; then
+  if [ "${wine_unix##*/}" = aarch64-unix ]; then
+    np_metalgldrv_note="not used on arm64 Wine"
+  elif [ ! -f "$np_metalgldrv_dylib" ]; then
+    np_metalgldrv_note="not installed ($np_metalgldrv_dylib)"
+  else
+    np_metalgldrv="$np_metalgldrv_dylib"
+    np_metalgldrv_note="on, $np_metalgldrv"
+    export METALGLDRV_HOOK_NSOPENGL=1
+  fi
+fi
+
 # Keeps Wine from inheriting the prefix and template locks (fd 8 and 9).
 without_lock_fds() {
   "$@" 8>&- 9>&-
@@ -211,6 +228,7 @@ fi
   echo "-- steam env passed through --"
   env | grep -iE '^(Steam|SDL_)' | sort
   [ -z "$np_dropped" ] || echo "ignored on arm64 Wine: $np_dropped"
+  echo "opengl: metalgldrv $np_metalgldrv_note"
 } >> "$log" 2>&1 || true
 
 stage_step="startup"
@@ -1384,6 +1402,9 @@ if [ -n "\$STEAM_DYLD_INSERT_LIBRARIES" ]; then
     export DYLD_INSERT_LIBRARIES="\$STEAM_DYLD_INSERT_LIBRARIES"
   fi
 fi
+if [ -n "\$NOTPROTON_METALGLDRV_DYLIB" ]; then
+  export DYLD_INSERT_LIBRARIES="\$NOTPROTON_METALGLDRV_DYLIB\${DYLD_INSERT_LIBRARIES:+:\$DYLD_INSERT_LIBRARIES}"
+fi
 [ -n "\$NOTPROTON_GAME_CWD" ] && cd "\$NOTPROTON_GAME_CWD"
 "$WINELOADER" "\$@"
 exit \$?
@@ -1485,7 +1506,7 @@ else
   echo "=== client staged no overlay renderer, overlay disabled ===" >> "$log" 2>&1 || true
 fi
 set -- --args "$shim_exe" "$@"
-for name in $(env | LC_ALL=C sed -nE 's/^(CX_APPLEGPTK_LIBD3DSHARED_PATH|Steam[A-Za-z0-9]*|(CX_GRAPHICS|D3DM_|DXMT_|DXVK_|MTL_|ROSETTA_)[A-Z0-9_]*)=.*/\1/p'); do
+for name in $(env | LC_ALL=C sed -nE 's/^(CX_APPLEGPTK_LIBD3DSHARED_PATH|Steam[A-Za-z0-9]*|(CX_GRAPHICS|D3DM_|DXMT_|DXVK_|METALGLDRV_|MTL_|ROSETTA_)[A-Z0-9_]*)=.*/\1/p'); do
   eval "value=\$$name"
   # shellcheck disable=SC2154 # eval assigns value on the line above
   set -- --env "$name=$value" "$@"
@@ -1505,6 +1526,7 @@ set -- \
   --env STEAM_COMPAT_CLIENT_INSTALL_PATH="$STEAM_COMPAT_CLIENT_INSTALL_PATH" \
   --env STEAM_COMPAT_APP_ID="$STEAM_COMPAT_APP_ID" \
   --env STEAM_DYLD_INSERT_LIBRARIES="$STEAM_DYLD_INSERT_LIBRARIES" \
+  --env NOTPROTON_METALGLDRV_DYLIB="$np_metalgldrv" \
   --env NOTPROTON_GAME_CWD="$game_cwd" "$@"
 lsregister="/System/Library/Frameworks/CoreServices.framework/Versions/A"
 lsregister="$lsregister/Frameworks/LaunchServices.framework/Support/lsregister"

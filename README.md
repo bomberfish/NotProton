@@ -17,6 +17,8 @@ I further recommend going into Steam Settings - Compatibility and selecting the 
 
 If a game has a native macOS version as well as a Windows one, Steam will download the macOS version. To override this behavior, right click on the game, select Properties, select Compatibility. Enable 'Force the use of a specific Steam Play compatibility tool'. Select whichever version of CrossOver you want to do use. That will make Steam download the Windows version. Unchecking the 'Force the use...' box or selecting 'No Compatibility Tool' in the drop down list will revert to the macOS version of the game, with the specifics there varying based on your Steam version.
 
+**OpenGL 4.6 with metalgldrv.** Apple's OpenGL stops at version 4.1, which some Windows OpenGL games need more than. [metalgldrv](https://github.com/bomberfish/metalgldrv) is an OpenGL 4.6 driver on Metal. Install it from the metalgldrv section of the NotProton app, then turn it on for a game under Properties - Compatibility - OpenGL. Its settings there (MetalFX upscaling, accuracy) apply only to that game. It is used by the Rosetta build only, not FEX.
+
 **Valve Anti-Cheat is not supported.** Proton itself does not support VAC in Valve titles; Valve ships native Linux ports instead. VAC titles will launch in Insecure Mode and will not allow matchmaking. 
 
 **This project now has a brew cask.** For brew users, you can install via ``brew install --cask notprotonnot/notproton/notproton``

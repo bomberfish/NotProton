@@ -25,6 +25,7 @@ struct StatusSnapshot: Sendable {
     var orphanedRunners: [String] = []
     var damagedRunners: [String] = []
     var installContent: DeploymentContent.Status = .unchecked
+    var metalGL: MetalGLDriver.Installed?
 
     static func capture(bundledVersion: String) -> StatusSnapshot {
         let installs = CrossOverSource.discover()
@@ -47,7 +48,8 @@ struct StatusSnapshot: Sendable {
             installedRunners: installed,
             orphanedRunners: RunnerStore.orphanedClones(),
             damagedRunners: RunnerStore.damagedClones(),
-            installContent: DeploymentContent.current(version: bundledVersion)
+            installContent: DeploymentContent.current(version: bundledVersion),
+            metalGL: MetalGLDriver.installed()
         )
     }
 }
@@ -554,6 +556,25 @@ final class SystemStatus {
             return SteamBundle.isRunning
                 ? String(localized: "Controller permission reset. Restart Steam so macOS asks again.")
                 : String(localized: "Controller permission reset. macOS asks again when Steam starts.")
+        }
+    }
+
+    func installMetalGL() async {
+        guard isIdle else { return }
+        let had = snapshot?.metalGL?.version
+        await perform(from: String(localized: "Looking for the latest metalgldrv")) { progress in
+            let version = try await MetalGLDriver.install(progress: progress)
+            return version == had
+                ? String(localized: "metalgldrv \(version) is already the latest.")
+                : String(localized: "metalgldrv \(version) installed. Turn it on for a game under Properties > Compatibility > OpenGL.")
+        }
+    }
+
+    func removeMetalGL() async {
+        guard isIdle else { return }
+        await perform(from: String(localized: "Removing metalgldrv")) { _ in
+            try MetalGLDriver.remove()
+            return String(localized: "metalgldrv removed. Games set to use it run on Apple's OpenGL.")
         }
     }
 

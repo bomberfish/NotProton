@@ -283,5 +283,25 @@ is "exit game ends the session" 143 "$rc"
 is "exit game does not wait out the shim" yes "$([ $(($(date +%s) - start)) -lt 5 ] && echo yes || echo no)"
 is "exit game tears the prefix down" yes "$(grep -q kill "$T/session.ev" && echo yes || echo no)"
 
+echo "== metalgldrv is injected ahead of the overlay =="
+mkdir -p "$T/inject"
+# macOS drops DYLD_* when it starts /bin/sh, so the launcher prints the value in place of starting Wine.
+(
+  WINELOADER=WINE loader_root="$T/inject" HOME="$T/inject-home"
+  eval "cat <<LAUNCHER
+$launcher_body"
+) | sed 's/^"WINE" "\$@"$/printf "%s" "$DYLD_INSERT_LIBRARIES"/' > "$T/inject/launcher"
+grep -q '^printf "%s" "\$DYLD_INSERT_LIBRARIES"$' "$T/inject/launcher" || { echo "FAIL: launcher Wine line not rewritten"; exit 1; }
+chmod +x "$T/inject/launcher"
+injected() {
+  env -u DYLD_INSERT_LIBRARIES -u NOTPROTON_GAME_CWD STEAM_DYLD_INSERT_LIBRARIES="$1" \
+    NOTPROTON_METALGLDRV_DYLIB="$2" "$T/inject/launcher"
+  cat "$T/inject/notproton-wine.log"
+}
+is "nothing to inject" "" "$(injected "" "")"
+is "overlay only" "/o.dylib" "$(injected /o.dylib "")"
+is "metalgldrv only" "/m d/l.dylib" "$(injected "" "/m d/l.dylib")"
+is "metalgldrv first, then the overlay" "/m d/l.dylib:/o.dylib" "$(injected /o.dylib "/m d/l.dylib")"
+
 [ "$fails" -eq 0 ] || { echo "launchercheck: $fails failed"; exit 1; }
 echo "launchercheck: all passed"
